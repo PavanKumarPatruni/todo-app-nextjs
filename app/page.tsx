@@ -5,7 +5,7 @@ import { getAllTodos } from "@/services/getAllTodos";
 
 import { TTodo } from "@/types";
 
-export const getTodos = async (): Promise<TTodo[]> => {
+const getTodos = async (): Promise<TTodo[]> => {
   const responseData = await getAllTodos();
   return responseData.data;
 };
