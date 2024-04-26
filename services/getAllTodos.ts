@@ -1,12 +1,20 @@
 "use server";
+import { toast } from "react-toastify";
 
-export const getAllTodos = async () => {
-  const res = await fetch("http://localhost:8081/v1/todo", {
-    cache: "no-store",
-  });
+import { TFilter } from "@/types";
+
+export const getAllTodos = async (status: TFilter | "ALL") => {
+  const res = await fetch(
+    "http://localhost:8081/v1/todo?" + new URLSearchParams({ status }),
+    {
+      cache: "no-store",
+    }
+  );
+
+  const responseData = await res.json();
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    toast(responseData?.message || "Failed to fetch data", { type: "error" });
   }
 
-  return await res.json();
+  return responseData;
 };

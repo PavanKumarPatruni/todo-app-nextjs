@@ -8,6 +8,8 @@ export type TType =
 
 export type TStatus = "ACTIVE" | "DONE";
 
+export type TFilter = TStatus | "ALL";
+
 export type TTodo = {
   id: number;
   todo: string;

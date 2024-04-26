@@ -1,4 +1,5 @@
 "use server";
+import { toast } from "react-toastify";
 
 import { TTodo } from "@/types";
 
@@ -10,9 +11,10 @@ export const deleteTodo = async (id: TTodo["id"]) => {
     },
   });
 
+  const responseData = await res.json();
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    toast(responseData?.message || "Failed to delete data", { type: "error" });
   }
 
-  return await res.json();
+  return responseData;
 };

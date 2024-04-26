@@ -1,4 +1,5 @@
 "use server";
+import { toast } from "react-toastify";
 
 import { TTodo } from "@/types";
 
@@ -11,9 +12,10 @@ export const addTodo = async ({ todo, type }: Pick<TTodo, "todo" | "type">) => {
     body: JSON.stringify({ todo, type }),
   });
 
+  const responseData = await res.json();
   if (!res.ok) {
-    throw new Error("Failed to add data");
+    toast(responseData?.message || "Failed to fetch data", { type: "error" });
   }
 
-  return await res.json();
+  return responseData;
 };

@@ -10,7 +10,11 @@ import { deleteTodo } from "@/services/deleteTodo";
 
 import { TStatus, TTodo } from "@/types";
 
-function Todo(todoObj: TTodo) {
+type Props = TTodo & {
+  onUpdate: () => void;
+};
+
+function Todo({ onUpdate, ...todoObj }: Props) {
   const { id, todo, type, status } = todoObj;
   const router = useRouter();
 
@@ -29,10 +33,6 @@ function Todo(todoObj: TTodo) {
 
     return "text-slate-100";
   }, [status]);
-
-  const onUpdate = useCallback(() => {
-    router.refresh();
-  }, [router]);
 
   const triggerUpdateApi = useCallback(
     async ({ status }: { status: TStatus }) => {
