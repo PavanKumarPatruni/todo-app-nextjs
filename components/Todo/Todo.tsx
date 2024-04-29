@@ -1,22 +1,21 @@
 "use client";
 import { useCallback, useMemo } from "react";
+import { useDispatch } from "react-redux";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 import EditTodoButton from "../EditTodoButton";
 
 import { updateTodo } from "@/services/updateTodo";
 import { deleteTodo } from "@/services/deleteTodo";
 
+import { fetchTodosAPI, resetFilter } from "@/redux/slices/TodoSlice";
+import { AppDispatch } from "@/redux/store";
+
 import { TStatus, TTodo } from "@/types";
 
-type Props = TTodo & {
-  onUpdate: () => void;
-};
-
-function Todo({ onUpdate, ...todoObj }: Props) {
+function Todo(todoObj: TTodo) {
+  const dispatch = useDispatch<AppDispatch>();
   const { id, todo, type, status } = todoObj;
-  const router = useRouter();
 
   const typeClass = useMemo(() => {
     if (type === "CODING") return "bg-red-300 text-red-950";
@@ -34,20 +33,25 @@ function Todo({ onUpdate, ...todoObj }: Props) {
     return "text-slate-100";
   }, [status]);
 
+  const onRefresh = useCallback(() => {
+    dispatch(resetFilter());
+    dispatch(fetchTodosAPI());
+  }, [dispatch]);
+
   const triggerUpdateApi = useCallback(
     async ({ status }: { status: TStatus }) => {
       await updateTodo({ ...todoObj, status });
 
-      onUpdate();
+      onRefresh();
     },
-    [onUpdate, todoObj]
+    [onRefresh, todoObj]
   );
 
   const onDeleteClick = useCallback(async () => {
     await deleteTodo(id);
 
-    onUpdate();
-  }, [id, onUpdate]);
+    onRefresh();
+  }, [id, onRefresh]);
 
   const onResetClick = useCallback(() => {
     triggerUpdateApi({ status: "ACTIVE" });

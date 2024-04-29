@@ -1,9 +1,8 @@
-"use server";
 import { toast } from "react-toastify";
 
 import { TFilter } from "@/types";
 
-export const getAllTodos = async (status: TFilter | "ALL") => {
+export const getAllTodos = async (status: TFilter = "ALL") => {
   const res = await fetch(
     "http://localhost:8081/v1/todo?" + new URLSearchParams({ status }),
     {
@@ -12,9 +11,9 @@ export const getAllTodos = async (status: TFilter | "ALL") => {
   );
 
   const responseData = await res.json();
-  if (!res.ok) {
+  if (!res.ok || !responseData.success) {
     toast(responseData?.message || "Failed to fetch data", { type: "error" });
   }
 
-  return responseData;
+  return responseData.data;
 };

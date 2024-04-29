@@ -1,18 +1,26 @@
 "use client";
 import { SyntheticEvent, useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
 
+import { AppDispatch } from "@/redux/store";
+import {
+  fetchTodosAPI,
+  setFilter,
+  useTodoFilter,
+} from "@/redux/slices/TodoSlice";
 import { TFilter } from "@/types";
 
-const Filters = ({ onSelect }: { onSelect: (filter: TFilter) => void }) => {
-  const [filter, setFilter] = useState("ALL");
+const Filters = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const filter = useTodoFilter();
 
   const onClick = useCallback(
     (event: SyntheticEvent<HTMLButtonElement>) => {
-      const value = event.currentTarget.name;
-      setFilter(value);
-      onSelect(value as TFilter);
+      const value = event.currentTarget.name as TFilter;
+      dispatch(setFilter(value));
+      dispatch(fetchTodosAPI(value));
     },
-    [onSelect]
+    [dispatch]
   );
 
   return (

@@ -1,9 +1,16 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 
 import Modal from "../Modal";
 import Dropdown from "../Dropdown";
+
+import { AppDispatch } from "@/redux/store";
+import {
+  fetchTodosAPI,
+  resetFilter,
+  useTodoFilter,
+} from "@/redux/slices/TodoSlice";
 
 import { updateTodo } from "@/services/updateTodo";
 import { addTodo } from "@/services/addTodo";
@@ -20,7 +27,8 @@ const TodoModal = ({
   onClose: () => void;
   todo?: TTodo;
 }) => {
-  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+
   const [todoText, setTodoText] = useState("");
   const [todoType, setTodoType] = useState<TType>("RANDOM");
 
@@ -29,22 +37,26 @@ const TodoModal = ({
     onClose();
   }, [onClose]);
 
+  const onRefresh = useCallback(() => {
+    onCancel();
+    dispatch(resetFilter());
+    dispatch(fetchTodosAPI());
+  }, [dispatch, onCancel]);
+
   const onAdd = useCallback(async () => {
     await addTodo({ todo: todoText, type: todoType });
 
-    onCancel();
-    router.refresh();
-  }, [onCancel, router, todoText, todoType]);
+    onRefresh();
+  }, [onRefresh, todoText, todoType]);
 
   const onUpdate = useCallback(async () => {
     if (todo) {
       const { id, type, status } = todo;
       await updateTodo({ id, status, todo: todoText, type: todoType });
 
-      onCancel();
-      router.refresh();
+      onRefresh();
     }
-  }, [onCancel, router, todo, todoText, todoType]);
+  }, [onRefresh, todo, todoText, todoType]);
 
   const onChange = useCallback((event: any) => {
     setTodoText(event?.target?.value);

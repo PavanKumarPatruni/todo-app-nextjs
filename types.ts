@@ -18,3 +18,9 @@ export type TTodo = {
   updatedAt: Date;
   status: TStatus;
 };
+
+export type IStore<T> = {
+  loading: boolean;
+  data: T;
+  error: string;
+};
