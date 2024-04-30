@@ -1,21 +1,18 @@
 "use client";
 import { useCallback, useMemo } from "react";
-import { useDispatch } from "react-redux";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import EditTodoButton from "../EditTodoButton";
 
 import { updateTodo } from "@/services/updateTodo";
 import { deleteTodo } from "@/services/deleteTodo";
 
-import { fetchTodosAPI, resetFilter } from "@/redux/slices/TodoSlice";
-import { AppDispatch } from "@/redux/store";
-
 import { TStatus, TTodo } from "@/types";
 
 function Todo(todoObj: TTodo) {
-  const dispatch = useDispatch<AppDispatch>();
   const { id, todo, type, status } = todoObj;
+  const router = useRouter();
 
   const typeClass = useMemo(() => {
     if (type === "CODING") return "bg-red-300 text-red-950";
@@ -34,9 +31,8 @@ function Todo(todoObj: TTodo) {
   }, [status]);
 
   const onRefresh = useCallback(() => {
-    dispatch(resetFilter());
-    dispatch(fetchTodosAPI());
-  }, [dispatch]);
+    router.refresh();
+  }, [router]);
 
   const triggerUpdateApi = useCallback(
     async ({ status }: { status: TStatus }) => {

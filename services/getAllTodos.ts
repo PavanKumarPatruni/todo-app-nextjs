@@ -1,5 +1,4 @@
-import { toast } from "react-toastify";
-
+"use server";
 import { TFilter } from "@/types";
 
 export const getAllTodos = async (status: TFilter = "ALL") => {
@@ -12,7 +11,9 @@ export const getAllTodos = async (status: TFilter = "ALL") => {
 
   const responseData = await res.json();
   if (!res.ok || !responseData.success) {
-    toast(responseData?.message || "Failed to fetch data", { type: "error" });
+    console.log(responseData?.message || "Failed to fetch data", {
+      type: "error",
+    });
   }
 
   return responseData.data;

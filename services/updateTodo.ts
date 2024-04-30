@@ -1,6 +1,4 @@
 "use server";
-import { toast } from "react-toastify";
-
 import { TTodo } from "@/types";
 
 export const updateTodo = async ({
@@ -23,7 +21,9 @@ export const updateTodo = async ({
 
   const responseData = await res.json();
   if (!res.ok) {
-    toast(responseData?.message || "Failed to update data", { type: "error" });
+    console.log(responseData?.message || "Failed to update data", {
+      type: "error",
+    });
   }
 
   return responseData;

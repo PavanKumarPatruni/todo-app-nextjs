@@ -1,7 +1,18 @@
 import AddTodoButton from "@/components/AddTodoButton";
 import Todos from "@/components/Todos";
 
-export default async function Home() {
+import { getAllTodos } from "@/services/getAllTodos";
+
+import { TFilter } from "@/types";
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { filter: string };
+}) {
+  console.log(searchParams);
+  const todos = await getAllTodos(searchParams?.filter as TFilter);
+
   return (
     <main className="min-h-screen relative flex flex-col gap-4 w-full md:max-w-5xl mx-auto px-4 md:px-24">
       <header className="sticky top-0 z-10 shadow-[0_0px_8px_1px_rgba(91,_91,_91,_0.7)]">
@@ -14,7 +25,7 @@ export default async function Home() {
         </div>
       </header>
 
-      <Todos />
+      <Todos data={todos} />
     </main>
   );
 }

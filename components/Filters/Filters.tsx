@@ -1,26 +1,20 @@
 "use client";
 import { SyntheticEvent, useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
-import { AppDispatch } from "@/redux/store";
-import {
-  fetchTodosAPI,
-  setFilter,
-  useTodoFilter,
-} from "@/redux/slices/TodoSlice";
 import { TFilter } from "@/types";
 
 const Filters = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const filter = useTodoFilter();
+  const router = useRouter();
+  const [filter, setFilter] = useState("ALL");
 
   const onClick = useCallback(
     (event: SyntheticEvent<HTMLButtonElement>) => {
       const value = event.currentTarget.name as TFilter;
-      dispatch(setFilter(value));
-      dispatch(fetchTodosAPI(value));
+      router.push(`/?filter=${value}`);
+      setFilter(value);
     },
-    [dispatch]
+    [router]
   );
 
   return (

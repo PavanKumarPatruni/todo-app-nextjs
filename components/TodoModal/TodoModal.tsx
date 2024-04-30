@@ -1,16 +1,9 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 import Modal from "../Modal";
 import Dropdown from "../Dropdown";
-
-import { AppDispatch } from "@/redux/store";
-import {
-  fetchTodosAPI,
-  resetFilter,
-  useTodoFilter,
-} from "@/redux/slices/TodoSlice";
 
 import { updateTodo } from "@/services/updateTodo";
 import { addTodo } from "@/services/addTodo";
@@ -27,7 +20,7 @@ const TodoModal = ({
   onClose: () => void;
   todo?: TTodo;
 }) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const [todoText, setTodoText] = useState("");
   const [todoType, setTodoType] = useState<TType>("RANDOM");
@@ -39,9 +32,8 @@ const TodoModal = ({
 
   const onRefresh = useCallback(() => {
     onCancel();
-    dispatch(resetFilter());
-    dispatch(fetchTodosAPI());
-  }, [dispatch, onCancel]);
+    router.refresh();
+  }, [onCancel, router]);
 
   const onAdd = useCallback(async () => {
     await addTodo({ todo: todoText, type: todoType });
