@@ -11,10 +11,13 @@ export const getAllTodos = async (status: TFilter = "ALL") => {
 
   const responseData = await res.json();
   if (!res.ok || !responseData.success) {
-    console.log(responseData?.message || "Failed to fetch data", {
-      type: "error",
-    });
+    return {
+      error: "Error getting todos",
+      data: [],
+    };
   }
 
-  return responseData.data;
+  return {
+    data: responseData.data,
+  };
 };

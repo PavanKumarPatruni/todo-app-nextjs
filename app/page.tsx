@@ -1,7 +1,7 @@
+import { Suspense } from "react";
+
 import AddTodoButton from "@/components/AddTodoButton";
 import Todos from "@/components/Todos";
-
-import { getAllTodos } from "@/services/getAllTodos";
 
 import { TFilter } from "@/types";
 
@@ -10,9 +10,6 @@ export default async function Home({
 }: {
   searchParams: { filter: string };
 }) {
-  console.log(searchParams);
-  const todos = await getAllTodos(searchParams?.filter as TFilter);
-
   return (
     <main className="min-h-screen relative flex flex-col gap-4 w-full md:max-w-5xl mx-auto px-4 md:px-24">
       <header className="sticky top-0 z-10 shadow-[0_0px_8px_1px_rgba(91,_91,_91,_0.7)]">
@@ -25,7 +22,15 @@ export default async function Home({
         </div>
       </header>
 
-      <Todos data={todos} />
+      <Suspense
+        fallback={
+          <div className="font-medium text-base text-center leading-loose tracking-wider p-8">
+            LOADING
+          </div>
+        }
+      >
+        <Todos filter={(searchParams.filter || "ALL") as TFilter} />
+      </Suspense>
     </main>
   );
 }

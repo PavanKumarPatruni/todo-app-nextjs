@@ -11,9 +11,9 @@ export const deleteTodo = async (id: TTodo["id"]) => {
 
   const responseData = await res.json();
   if (!res.ok) {
-    console.log(responseData?.message || "Failed to delete data", {
-      type: "error",
-    });
+    return {
+      error: responseData?.message || "Failed to delete data",
+    };
   }
 
   return responseData;

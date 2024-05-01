@@ -12,9 +12,9 @@ export const addTodo = async ({ todo, type }: Pick<TTodo, "todo" | "type">) => {
 
   const responseData = await res.json();
   if (!res.ok) {
-    console.log(responseData?.message || "Failed to fetch data", {
-      type: "error",
-    });
+    return {
+      error: responseData?.message || "Failed to fetch data",
+    };
   }
 
   return responseData;

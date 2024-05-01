@@ -1,9 +1,14 @@
 import Todo from "../Todo";
 import Filters from "../Filters";
+import Toast from "@/components/Toast";
 
-import { TTodo } from "@/types";
+import { getAllTodos } from "@/services/getAllTodos";
 
-function Todos({ data }: { data: TTodo[] }) {
+import { TFilter, TTodo } from "@/types";
+
+async function Todos({ filter }: { filter: TFilter }) {
+  const { data, error } = await getAllTodos(filter);
+
   return (
     <div className="flex flex-col divide-y shadow-[0_0px_8px_1px_rgba(91,_91,_91,_0.7)]">
       <div className="min-h-[400px] relative">
@@ -19,6 +24,7 @@ function Todos({ data }: { data: TTodo[] }) {
       </div>
 
       <Filters />
+      <Toast message={error} />
     </div>
   );
 }

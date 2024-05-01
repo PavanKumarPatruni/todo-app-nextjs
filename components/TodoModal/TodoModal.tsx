@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 import Modal from "../Modal";
 import Dropdown from "../Dropdown";
@@ -36,15 +37,30 @@ const TodoModal = ({
   }, [onCancel, router]);
 
   const onAdd = useCallback(async () => {
-    await addTodo({ todo: todoText, type: todoType });
+    const res = await addTodo({ todo: todoText, type: todoType });
+    if (res.error) {
+      toast.error(res.error);
+
+      return;
+    }
 
     onRefresh();
   }, [onRefresh, todoText, todoType]);
 
   const onUpdate = useCallback(async () => {
     if (todo) {
-      const { id, type, status } = todo;
-      await updateTodo({ id, status, todo: todoText, type: todoType });
+      const { id, status } = todo;
+      const res = await updateTodo({
+        id,
+        status,
+        todo: todoText,
+        type: todoType,
+      });
+      if (res.error) {
+        toast.error(res.error);
+
+        return;
+      }
 
       onRefresh();
     }

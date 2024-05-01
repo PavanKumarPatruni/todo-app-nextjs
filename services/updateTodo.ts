@@ -21,9 +21,9 @@ export const updateTodo = async ({
 
   const responseData = await res.json();
   if (!res.ok) {
-    console.log(responseData?.message || "Failed to update data", {
-      type: "error",
-    });
+    return {
+      error: responseData?.message || "Failed to update data",
+    };
   }
 
   return responseData;
